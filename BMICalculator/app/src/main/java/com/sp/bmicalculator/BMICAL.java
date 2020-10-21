@@ -60,8 +60,8 @@ public class BMICAL extends AppCompatActivity {
             String bmiInterpretation = interpretBMI(newBMI);
 
             Result.setText("BMI - " + newBMI + " " + bmiInterpretation);
-            String bmivalue_s = ("BMI - " + newBMI + "\n" + bmiInterpretation);
-            Toast.makeText(v.getContext(),bmivalue_s,Toast.LENGTH_LONG).show();
+            //String bmivalue_s = ("BMI - " + newBMI + "\n" + bmiInterpretation);
+            //Toast.makeText(v.getContext(),bmivalue_s,Toast.LENGTH_LONG).show();
         }
     };
 
