@@ -75,6 +75,11 @@ public class RestaurantList extends AppCompatActivity {
                 intent =new Intent(RestaurantList.this,DetailForm.class);
                 startActivity(intent);
                 break;
+            case(R.id.about):
+                Intent abt;
+                abt =new Intent(RestaurantList.this,about.class);
+                startActivity(abt);
+                break;
         }
         return  super.onOptionsItemSelected(item);
     }

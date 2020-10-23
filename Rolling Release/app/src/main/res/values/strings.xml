@@ -16,4 +16,6 @@
     <string name="chinese">Chinese</string>
     <string name="textview">TextView</string>
     <string name="click_the_menu_button_to_add_a_restaurant">Click the MENU button to add a restaurant!</string>
+    <string name="about">About</string>
+    <string name="restaurant_list_by">Restaurant List By</string>
 </resources>
