@@ -1,6 +1,9 @@
 package com.sp.restaurantlist;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -14,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +66,22 @@ public class RestaurantList extends AppCompatActivity {
         host.addTab(spec);
         host.setCurrentTab(0);
         list.setOnItemClickListener(onListClick);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.option, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch(item.getItemId()){
+            case(R.id.about):
+                Toast.makeText(this,"Restaurant List - Version 1.0",Toast.LENGTH_LONG).show();
+                break;
+        }
+        return  super.onOptionsItemSelected(item);
     }
 
     private View.OnClickListener onSave = new View.OnClickListener()
