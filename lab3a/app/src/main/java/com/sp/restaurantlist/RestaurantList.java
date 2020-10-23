@@ -33,6 +33,7 @@ public class RestaurantList extends AppCompatActivity {
     private RestaurantAdapter adapter = null;
     private ListView list;
     private TabHost host;
+    private boolean showMenu = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,12 +67,40 @@ public class RestaurantList extends AppCompatActivity {
         host.addTab(spec);
         host.setCurrentTab(0);
         list.setOnItemClickListener(onListClick);
+
+        host.setOnTabChangedListener(new TabHost.OnTabChangeListener(){
+            @Override
+            public void onTabChanged(String tabId){
+                invalidateOptionsMenu();
+            }
+        });
+    }
+
+    @Override
+    public void invalidateOptionsMenu(){
+        if(host.getCurrentTab()==0){
+            showMenu=false;
+        }
+        else if (host.getCurrentTab()==1){
+            showMenu=true;
+        }
+        super.invalidateOptionsMenu();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.option, menu);
-        return super.onCreateOptionsMenu(menu);
+        //return super.onCreateOptionsMenu(menu);
+        if (showMenu == true)
+            return true;
+        else
+            return false;
+    }
+
+    @Override
+    protected void onStart(){
+        invalidateOptionsMenu();
+        super.onStart();
     }
 
     @Override
