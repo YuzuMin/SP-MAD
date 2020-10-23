@@ -30,6 +30,16 @@ public class RestaurantHelper extends SQLiteOpenHelper {
                 "SELECT _id, restaurantNAME, restaurantAddress, restaurantTel,"+
                         " restaurantType FROM restaurants_table ORDER BY restaurantNAME",null));
     }
+
+    public Cursor getById(String id){
+        String[] args ={id};
+
+        return (getReadableDatabase().rawQuery(
+                "SELECT _id, restaurantNAME, restaurantAddress, restaurantTel,"+
+                        " restaurantType FROM restaurants_table WHERE _ID=?",args));
+
+    }
+
     public void insert(String restaurantName, String restaurantAddress,
                        String restaurantTel, String restaurantType) {
         ContentValues cv =new ContentValues();
@@ -40,6 +50,22 @@ public class RestaurantHelper extends SQLiteOpenHelper {
         cv.put("restaurantType",restaurantType);
 
         getWritableDatabase().insert("restaurants_table","restaurantName", cv);
+    }
+    public void update(String id,String restaurantName, String restaurantAddress,
+                       String restaurantTel, String restaurantType){
+        ContentValues cv =new ContentValues();
+        String[] args ={id};
+        cv.put("restaurantName",restaurantName);
+        cv.put("restaurantAddress", restaurantAddress);
+        cv.put("restaurantTel",restaurantTel);
+        cv.put("restaurantType",restaurantType);
+
+        getWritableDatabase().update("restaurants_table",cv,"_ID=?",args);
+    }
+
+
+    public String getID(Cursor c){
+        return (c.getString(0));
     }
     public String getRestaurantName(Cursor c){
         return (c.getString(1));

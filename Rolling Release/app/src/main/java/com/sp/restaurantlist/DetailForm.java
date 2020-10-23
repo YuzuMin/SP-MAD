@@ -1,6 +1,7 @@
 package com.sp.restaurantlist;
 
 import android.os.Bundle;
+import android.database.Cursor;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,6 +17,7 @@ public class DetailForm extends AppCompatActivity {
     private EditText restaurantTel;
 
     private RestaurantHelper helper = null;
+    private String restaurantID="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,12 +34,46 @@ public class DetailForm extends AppCompatActivity {
         restaurantTel = findViewById(R.id.restaurant_tel);
 
         helper = new RestaurantHelper(this);
+        restaurantID = getIntent().getStringExtra("ID");
+        if(restaurantID !=null){
+            load();
+        }
     }
 
     @Override
     protected void onDestroy(){
         super.onDestroy();
         helper.close();
+    }
+
+    private void load(){
+        Cursor c =helper.getById(restaurantID);
+        c.moveToFirst();
+        restaurantName.setText(helper.getRestaurantName(c));
+        restaurantAddress.setText(helper.getRestaurantAddress(c));
+        restaurantTel.setText(helper.getRestaurantTel(c));
+
+        if(helper.getRestaurantType(c).equals("Chinese")){
+            restaurantTypes.check(R.id.chinese);
+        }
+        else if(helper.getRestaurantType(c).equals("Western")){
+            restaurantTypes.check(R.id.western);
+        }
+        else if(helper.getRestaurantType(c).equals("Indian")){
+            restaurantTypes.check(R.id.indian);
+        }
+        else if(helper.getRestaurantType(c).equals("Indonesian")){
+            restaurantTypes.check(R.id.indonesian);
+        }
+        else if(helper.getRestaurantType(c).equals("Korean")){
+            restaurantTypes.check(R.id.korean);
+        }
+        else if(helper.getRestaurantType(c).equals("Japanese")){
+            restaurantTypes.check(R.id.japanese);
+        }
+        else {
+            restaurantTypes.check(R.id.thai);
+        }
     }
 
     private View.OnClickListener onSave = new View.OnClickListener()
@@ -73,7 +109,13 @@ public class DetailForm extends AppCompatActivity {
                     break;
             }
 
-            helper.insert(nameStr,addrStr,telStr,restType);
+            if (restaurantID==null){
+                helper.insert(nameStr,addrStr,telStr,restType);
+            }
+            else{
+                helper.update(restaurantID,nameStr,addrStr,telStr,restType);
+            }
+
             finish();
         }
     };
