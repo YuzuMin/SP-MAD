@@ -2,106 +2,55 @@ package com.sp.restaurantlist;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioGroup;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.TabHost;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import android.content.Context;
 import androidx.cursoradapter.widget.CursorAdapter;
 
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class RestaurantList extends AppCompatActivity {
-    private EditText restaurantName;
-    private RadioGroup restaurantTypes;
-    private Button buttonSave;
-    private EditText restaurantAddress;
-    private EditText restaurantTel;
 
     private Cursor model =null;
     private RestaurantAdapter adapter = null;
     private ListView list;
     private RestaurantHelper helper =null;
-    private TabHost host;
-    private boolean showMenu = false;
+    private TextView empty =null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        restaurantName=findViewById(R.id.restaurant_name);
-        restaurantTypes=findViewById(R.id.restaurant_types);
-
-        buttonSave =findViewById(R.id.button_save);
-        buttonSave.setOnClickListener(onSave);
-
-        restaurantAddress=findViewById(R.id.restaurant_address);
-        restaurantTel=findViewById(R.id.restaurant_tel);
-
+        empty = findViewById(R.id.empty);
         helper = new RestaurantHelper(this);
-        list = findViewById(R.id.restaurants);
+        list = findViewById(R.id.list);
         model =helper.getALL();
         adapter= new RestaurantAdapter(this, model ,0);
         list.setAdapter(adapter);
-
-        host = findViewById(R.id.tabHost);
-        host.setup();
-
-        TabHost.TabSpec spec = host.newTabSpec("List");
-        spec.setContent(R.id.restaurants_tab);
-        spec.setIndicator("List");
-        host.addTab(spec);
-
-        spec = host.newTabSpec("Details");
-        spec.setContent(R.id.details_tab);
-        spec.setIndicator("Details");
-        host.addTab(spec);
-        host.setCurrentTab(0);
-        list.setOnItemClickListener(onListClick);
-
-        host.setOnTabChangedListener(new TabHost.OnTabChangeListener(){
-            @Override
-            public void onTabChanged(String tabId){
-                invalidateOptionsMenu();
-            }
-        });
     }
 
     @Override
-    public void invalidateOptionsMenu(){
-        if(host.getCurrentTab()==0){
-            showMenu=false;
+    protected void onResume(){
+        super.onResume();
+        if(model!=null){
+            model.close();
         }
-        else if (host.getCurrentTab()==1){
-            showMenu=true;
+        model = helper.getALL();
+        if(model.getCount()>0){
+            empty.setVisibility(View.INVISIBLE);
         }
-        super.invalidateOptionsMenu();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.option, menu);
-        //return super.onCreateOptionsMenu(menu);
-        if (showMenu == true)
-            return true;
-        else
-            return false;
+        adapter.swapCursor(model);
     }
 
     @Override
@@ -111,60 +60,22 @@ public class RestaurantList extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart(){
-        invalidateOptionsMenu();
-        super.onStart();
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.option, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         switch(item.getItemId()){
-            case(R.id.about):
-                Toast.makeText(this,"Restaurant List - Version 1.0",Toast.LENGTH_LONG).show();
+            case(R.id.add):
+                Intent intent;
+                intent =new Intent(RestaurantList.this,DetailForm.class);
+                startActivity(intent);
                 break;
         }
         return  super.onOptionsItemSelected(item);
     }
-
-    private View.OnClickListener onSave = new View.OnClickListener()
-    {
-        @Override
-        public  void onClick(View v) {
-            String nameStr = restaurantName.getText().toString();
-            String addressStr = restaurantAddress.getText().toString();
-            String telStr = restaurantTel.getText().toString();
-            String restType = "";
-
-            switch (restaurantTypes.getCheckedRadioButtonId()){
-                case R.id.chinese:
-                    restType="Chinese";
-                    break;
-                case R.id.western:
-                    restType="Western";
-                    break;
-                case R.id.indian:
-                    restType="Indian";
-                    break;
-                case R.id.indonesian:
-                    restType="Indonesian";
-                    break;
-                case R.id.korean:
-                    restType="Korean";
-                    break;
-                case R.id.japanese:
-                    restType="Japanese";
-                    break;
-                case R.id.thai:
-                    restType="Thai";
-                    break;
-            }
-
-            helper.insert(nameStr,addressStr,telStr,restType);
-            model=helper.getALL();
-            adapter.swapCursor(model);
-            host.setCurrentTab(0);
-        }
-    };
 
     static class RestaurantHolder {
         private TextView restName =null;
@@ -214,37 +125,5 @@ public class RestaurantList extends AppCompatActivity {
         }
     }
 
-    AdapterView.OnItemClickListener onListClick = new AdapterView.OnItemClickListener(){
-      @Override
-      public void onItemClick(AdapterView<?> parent, View view, int position, long id){
-          model.moveToPosition(position);
-          restaurantName.setText(helper.getRestaurantName(model));
-          restaurantAddress.setText(helper.getRestaurantAddress(model));
-          restaurantTel.setText(helper.getRestaurantTel(model));
-
-          if(helper.getRestaurantType(model).equals("Chinese")){
-              restaurantTypes.check(R.id.chinese);
-          }
-          else if(helper.getRestaurantType(model).equals("Western")){
-              restaurantTypes.check(R.id.western);
-          }
-          else if(helper.getRestaurantType(model).equals("Indian")){
-              restaurantTypes.check(R.id.indian);
-          }
-          else if(helper.getRestaurantType(model).equals("Indonesian")){
-              restaurantTypes.check(R.id.indonesian);
-          }
-          else if(helper.getRestaurantType(model).equals("Korean")){
-              restaurantTypes.check(R.id.korean);
-          }
-          else if(helper.getRestaurantType(model).equals("Japanese")){
-              restaurantTypes.check(R.id.japanese);
-          }
-          else {
-              restaurantTypes.check(R.id.thai);
-          }
-          host.setCurrentTab(1);
-      }
-    };
 
 }
