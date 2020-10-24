@@ -1,10 +1,16 @@
 package com.sp.restaurantlist;
 
 import android.os.Bundle;
+import android.database.Cursor;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,6 +22,12 @@ public class DetailForm extends AppCompatActivity {
     private EditText restaurantTel;
 
     private RestaurantHelper helper = null;
+    private String restaurantID="";
+
+    private TextView location =null;
+    private GPSTracker gpsTracker;
+    private double latitude = 0.0d;
+    private double longitude = 0.0d;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,13 +44,78 @@ public class DetailForm extends AppCompatActivity {
         restaurantTel = findViewById(R.id.restaurant_tel);
 
         helper = new RestaurantHelper(this);
+
+        location = findViewById(R.id.location);
+        gpsTracker = new GPSTracker(DetailForm.this);
+
+        restaurantID = getIntent().getStringExtra("ID");
+        if(restaurantID !=null){
+            load();
+        }
     }
 
     @Override
     protected void onDestroy(){
         super.onDestroy();
         helper.close();
+        gpsTracker.stopUsingGPS();
     }
+
+    private void load(){
+        Cursor c =helper.getById(restaurantID);
+        c.moveToFirst();
+        restaurantName.setText(helper.getRestaurantName(c));
+        restaurantAddress.setText(helper.getRestaurantAddress(c));
+        restaurantTel.setText(helper.getRestaurantTel(c));
+
+        if(helper.getRestaurantType(c).equals("Chinese")){
+            restaurantTypes.check(R.id.chinese);
+        }
+        else if(helper.getRestaurantType(c).equals("Western")){
+            restaurantTypes.check(R.id.western);
+        }
+        else if(helper.getRestaurantType(c).equals("Indian")){
+            restaurantTypes.check(R.id.indian);
+        }
+        else if(helper.getRestaurantType(c).equals("Indonesian")){
+            restaurantTypes.check(R.id.indonesian);
+        }
+        else if(helper.getRestaurantType(c).equals("Korean")){
+            restaurantTypes.check(R.id.korean);
+        }
+        else if(helper.getRestaurantType(c).equals("Japanese")){
+            restaurantTypes.check(R.id.japanese);
+        }
+        else {
+            restaurantTypes.check(R.id.thai);
+        }
+
+        latitude =helper.getLatitude(c);
+        longitude =helper.getLongitude(c);
+        location.setText(String.valueOf(latitude)+", "+String.valueOf(longitude));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        new MenuInflater(this).inflate(R.menu.details_option,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        if(item.getItemId() == R.id.get_location){
+            if (gpsTracker.canGetLocation()){
+                latitude=gpsTracker.getLatitude();
+                longitude=gpsTracker.getLongitude();
+                location.setText(String.valueOf(latitude)+", "+String.valueOf(longitude));
+                Toast.makeText(getApplicationContext(),"Your Location - \nLat: "+latitude
+                        +"\nLong: "+ longitude,Toast.LENGTH_LONG).show();
+            }
+            return (true);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     private View.OnClickListener onSave = new View.OnClickListener()
     {
@@ -73,7 +150,13 @@ public class DetailForm extends AppCompatActivity {
                     break;
             }
 
-            helper.insert(nameStr,addrStr,telStr,restType);
+            if (restaurantID==null){
+                helper.insert(nameStr,addrStr,telStr,restType, latitude,longitude);
+            }
+            else{
+                helper.update(restaurantID,nameStr,addrStr,telStr,restType, latitude,longitude);
+            }
+
             finish();
         }
     };

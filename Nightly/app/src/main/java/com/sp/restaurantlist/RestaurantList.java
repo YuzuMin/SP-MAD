@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.AdapterView;
 
 import android.content.Context;
 import androidx.cursoradapter.widget.CursorAdapter;
@@ -37,6 +38,7 @@ public class RestaurantList extends AppCompatActivity {
         list = findViewById(R.id.list);
         model =helper.getALL();
         adapter= new RestaurantAdapter(this, model ,0);
+        list.setOnItemClickListener(onListClick);
         list.setAdapter(adapter);
     }
 
@@ -73,9 +75,25 @@ public class RestaurantList extends AppCompatActivity {
                 intent =new Intent(RestaurantList.this,DetailForm.class);
                 startActivity(intent);
                 break;
+            case(R.id.about):
+                Intent abt;
+                abt =new Intent(RestaurantList.this,about.class);
+                startActivity(abt);
+                break;
         }
         return  super.onOptionsItemSelected(item);
     }
+
+    private AdapterView.OnItemClickListener onListClick = new AdapterView.OnItemClickListener(){
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+            model.moveToPosition(position);
+            String recordID=helper.getID(model);
+            Intent intent;
+            intent = new Intent(RestaurantList.this,DetailForm.class);
+            intent.putExtra("ID",recordID);
+            startActivity(intent);
+        }
+    };
 
     static class RestaurantHolder {
         private TextView restName =null;
