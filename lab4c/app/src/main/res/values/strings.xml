@@ -18,4 +18,5 @@
     <string name="click_the_menu_button_to_add_a_restaurant">Click the MENU button to add a restaurant!</string>
     <string name="about">About</string>
     <string name="restaurant_list_by">Restaurant List By</string>
+    <string name="copyright_c_2020_yuzumin">MIT License Copyright (c) 2020 YuzuMin</string>
 </resources>
