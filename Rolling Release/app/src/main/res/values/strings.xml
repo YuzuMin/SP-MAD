@@ -19,4 +19,5 @@
     <string name="about">About</string>
     <string name="restaurant_list_by">Restaurant List By</string>
     <string name="copyright_c_2020_yuzumin">MIT License Copyright (c) 2020 YuzuMin</string>
+    <string name="title_activity_restaurant_map">Map</string>
 </resources>
