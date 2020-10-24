@@ -2,10 +2,15 @@ package com.sp.restaurantlist;
 
 import android.os.Bundle;
 import android.database.Cursor;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,6 +23,11 @@ public class DetailForm extends AppCompatActivity {
 
     private RestaurantHelper helper = null;
     private String restaurantID="";
+
+    private TextView location =null;
+    private GPSTracker gpsTracker;
+    private double latitude = 0.0d;
+    private double longitude = 0.0d;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +44,10 @@ public class DetailForm extends AppCompatActivity {
         restaurantTel = findViewById(R.id.restaurant_tel);
 
         helper = new RestaurantHelper(this);
+
+        location = findViewById(R.id.location);
+        gpsTracker = new GPSTracker(DetailForm.this);
+
         restaurantID = getIntent().getStringExtra("ID");
         if(restaurantID !=null){
             load();
@@ -44,6 +58,7 @@ public class DetailForm extends AppCompatActivity {
     protected void onDestroy(){
         super.onDestroy();
         helper.close();
+        gpsTracker.stopUsingGPS();
     }
 
     private void load(){
@@ -74,7 +89,33 @@ public class DetailForm extends AppCompatActivity {
         else {
             restaurantTypes.check(R.id.thai);
         }
+
+        latitude =helper.getLatitude(c);
+        longitude =helper.getLongitude(c);
+        location.setText(String.valueOf(latitude)+", "+String.valueOf(longitude));
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        new MenuInflater(this).inflate(R.menu.details_option,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        if(item.getItemId() == R.id.get_location){
+            if (gpsTracker.canGetLocation()){
+                latitude=gpsTracker.getLatitude();
+                longitude=gpsTracker.getLongitude();
+                location.setText(String.valueOf(latitude)+", "+String.valueOf(longitude));
+                Toast.makeText(getApplicationContext(),"Your Location - \nLat: "+latitude
+                        +"\nLong: "+ longitude,Toast.LENGTH_LONG).show();
+            }
+            return (true);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     private View.OnClickListener onSave = new View.OnClickListener()
     {
@@ -110,10 +151,10 @@ public class DetailForm extends AppCompatActivity {
             }
 
             if (restaurantID==null){
-                helper.insert(nameStr,addrStr,telStr,restType);
+                helper.insert(nameStr,addrStr,telStr,restType, latitude,longitude);
             }
             else{
-                helper.update(restaurantID,nameStr,addrStr,telStr,restType);
+                helper.update(restaurantID,nameStr,addrStr,telStr,restType, latitude,longitude);
             }
 
             finish();
