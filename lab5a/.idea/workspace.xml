@@ -47,7 +47,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../lab5b" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
   <component name="RecentsManager">
@@ -152,10 +152,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="1298" y="327" key="AndroidCreateXmlResourceDialog/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1603514729262" />
-    <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1603533049356">
+    <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1603645558968">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="740" y="275" key="FileChooserDialogImpl/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1603533049356" />
+    <state x="740" y="275" key="FileChooserDialogImpl/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1603645558968" />
     <state width="914" height="261" key="GridCell.Tab.0.bottom" timestamp="1603484325313">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

@@ -13,7 +13,7 @@ public class Restaurant {
     public void setAddress(String restaurantAddress){ this.restaurantAddress=restaurantAddress;}
 
     public String getTelephone() {return restaurantTel;}
-    public void setTelephone(String restaurantTel){ this.restaurantTel=restaurantName;}
+    public void setTelephone(String restaurantTel){ this.restaurantTel=restaurantTel;}
 
     public String getRestaurantType() {return restaurantType;}
     public void setRestaurantType(String restaurantType){ this.restaurantType=restaurantType;}
