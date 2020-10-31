@@ -60,7 +60,7 @@ public class RestaurantList extends AppCompatActivity {
         spec.setContent(R.id.details_tab);
         spec.setIndicator("Details");
         host.addTab(spec);
-        host.setCurrentTab(0);
+        host.setCurrentTab(1);
         list.setOnItemClickListener(onListClick);
     }
 
@@ -103,6 +103,7 @@ public class RestaurantList extends AppCompatActivity {
             restaurant.setTelephone(telStr);
             restaurant.setRestaurantType(restType);
             adapter.add(restaurant);
+            host.setCurrentTab(0);
         }
     };
 
