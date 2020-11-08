@@ -72,7 +72,7 @@ public class RestaurantList extends AppCompatActivity {
         spec.setContent(R.id.details_tab);
         spec.setIndicator("Details");
         host.addTab(spec);
-        host.setCurrentTab(0);
+        host.setCurrentTab(1);
         list.setOnItemClickListener(onListClick);
 
         host.setOnTabChangedListener(new TabHost.OnTabChangeListener(){
