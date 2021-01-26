@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -31,6 +32,12 @@ public class CourseList extends AppCompatActivity {
         list = findViewById(R.id.courses);
         adapter=new CourseAdapter();
         list.setAdapter(adapter);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
 
         String s90title="Aerospace Electronics (S90)";
         String s90desc="Highly recognised Aerospace Electronics diploma course to develop future-ready engineers for growing Singapore as a Smart Aviation Hub";
