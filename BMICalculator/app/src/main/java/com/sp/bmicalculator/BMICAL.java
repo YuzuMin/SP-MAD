@@ -49,12 +49,12 @@ public class BMICAL extends AppCompatActivity {
             }
 
             double bmi;
-            bmi = calculateBMI(weight, height);
+            bmi = calculateBMI2(weight, height);
 
 
             // round to 1 digit
             double newBMI = Math.round(bmi*100.0)/100.0;
-            DecimalFormat f = new DecimalFormat("##.##");
+
 
             // interpret the meaning of the bmi value
             String bmiInterpretation = interpretBMI(newBMI);
@@ -64,19 +64,15 @@ public class BMICAL extends AppCompatActivity {
             //Toast.makeText(v.getContext(),bmivalue_s,Toast.LENGTH_LONG).show();
         }
     };
-
-    private double getTextAsDouble(EditText editText) {
-        String input = editText.getText().toString().replace(',', '.');
-        try {
-            return Double.valueOf(input);
-        } catch (NumberFormatException e) {
-            return 0;
-        }
-    }
-
     // the formula to calculate the BMI index
     private double calculateBMI (double weight, double height) {
         return (double) (((weight) / (height)) / (height));
+    }
+    private double calculateBMI2 (double weight, double height) {
+        double bmivalue;
+        bmivalue=height*height;
+        bmivalue=weight/bmivalue;
+        return bmivalue;
     }
     // interpret what BMI means
     private String interpretBMI(double bmi) {
